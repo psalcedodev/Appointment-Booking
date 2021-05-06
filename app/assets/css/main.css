@@ -1,0 +1,134 @@
+input {
+    font-family: "Lato", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: #374853;
+    line-height: 2.375rem;
+    min-height: 2.375rem;
+    position: relative;
+    border: 1px solid #e8e8e8;
+    border-radius: 5px;
+    background: #fff;
+    padding: 0 0.8125rem;
+    width: 100%;
+    transition: border 0.1s ease;
+    box-sizing: border-box;
+}
+input.error,
+input.error:focus {
+    border-color: #f79483;
+}
+.card {
+    height: 450px;
+    overflow: auto;
+}
+.card::-webkit-scrollbar {
+    width: 12px;
+    background-color: #343a40;
+}
+
+.card::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: lightgray;
+}
+
+.card::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #303d46;
+}
+.content-page > .content {
+    margin-bottom: 0 !important;
+    padding: 20px;
+    -webkit-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+input.valid,
+input.valid:focus {
+    border-color: #41b883;
+}
+input:focus {
+    border-color: #a8a8a8;
+    outline: none;
+}
+label {
+    font-size: 0.8125rem;
+    color: #4b6372;
+    margin-bottom: 0.3125rem;
+    margin-left: 0.875rem;
+    display: block;
+}
+
+.error-message {
+    display: block;
+    color: #f57f6c;
+}
+h1 {
+    color: #374853;
+}
+button {
+    font-family: "Lato", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: #fff;
+    min-height: 2.5rem;
+    line-height: 1.4;
+    padding: 0.5rem 1.875rem 0.625rem;
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    background: #41b883;
+    border: none;
+    border-radius: 5px;
+    z-index: 1;
+    overflow: hidden;
+    outline: none;
+    vertical-align: middle;
+    transition: 0.1s background ease, 0.1s border-color ease, 0.1s color ease;
+    border-bottom: 3px solid #266d4d;
+    text-decoration: none;
+}
+.card-body {
+    padding: 1rem !important;
+}
+button:hover,
+button:focus {
+    cursor: pointer;
+}
+button:disabled {
+    background: #ccc6c6;
+    border-bottom: 3px solid #b3b1b1;
+    cursor: not-allowed;
+}
+option:disabled {
+    color: darkgray;
+}
+
+input[type="checkbox"] {
+    visibility: hidden;
+    font-size: 1.33333333em;
+    line-height: 0.75em;
+    vertical-align: -10%;
+    position: relative;
+    left: 5px;
+    color: #555 !important;
+    font-weight: 200;
+    letter-spacing: 1px;
+}
+
+input[type="checkbox"]:before {
+    font-family: "Font Awesome 5 Free" !important;
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+input[type="checkbox"]:before {
+    font-weight: 400;
+    content: "\f0c8";
+}
+
+input[type="checkbox"]:checked:before {
+    font-weight: 900;
+    content: "\f14a";
+}

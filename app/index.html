@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <!-- Font Awesome -->
+        <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        />
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="/app/assets/MDB/css/bootstrap.min.css" />
+        <!-- Material Design Bootstrap -->
+        <link href="/app/assets/MDB/css/mdb.min.css" rel="stylesheet" />
+
+        <link rel="stylesheet" href="/app/assets/css/main.css" />
+    </head>
+    <body>
+        <div id="app">
+            <div class="container">
+                <div class="row form-group">
+                    <div class="col-md-12 mb-0 p-0">
+                        <ul
+                            class="nav nav-pills nav-justified thumbnail setup-panel stepper stepper-horizontal"
+                        >
+                            <li class="active" id="reschedule">
+                                <a href="#step-1">
+                                    <span class="label"
+                                        >Choose Appointment</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li class="disabled">
+                                <a href="#step-2">
+                                    <span class="label">Your Information</span>
+                                </a>
+                            </li>
+                            <li class="disabled">
+                                <a href="#step-3">
+                                    <span class="label">Confirmation</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+
+                <div class="row setup-content" id="step-1">
+                    <div class="col-xs-12 mx-auto">
+                        <div class="col-md-12 well ">
+                            <label>Select a date:</label>
+
+                            <input
+                                class="form-control"
+                                type="date"
+                                name="somedate"
+                                @input="checkSlots(); $v.newApptDate.$touch()"
+                                v-model="newApptDate"
+                                :class="{error: $v.newApptDate.$error, valid: !$v.newApptDate.$invalid}"
+                            />
+                            <p
+                                v-if="$v.newApptDate.$error"
+                                class="error-message"
+                            >
+                                Date is required
+                            </p>
+
+                            <label>Select a time:</label>
+                            <select v-model="newApptTime" class="form-control">
+                                <option
+                                    value
+                                    disabled
+                                    selected
+                                    style="color: gray !important;"
+                                    >Select a time</option
+                                >
+                                <option
+                                    v-for="time in availableTimes"
+                                    :disabled="time.reserved"
+                                    >{{time.time}}</option
+                                >
+                            </select>
+
+                            <br />
+                            <div class="text-center">
+                                <button
+                                    id="activate-step-2"
+                                    class="btn btn-primary btn-sm "
+                                    type="submit"
+                                >
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row setup-content" id="step-2">
+                <div class="col-xs-12 mx-auto">
+                    <div class="col-md-12 well ">
+                        <p>
+                            Appointment: {{newApptDate | dateFormat}} at
+                            {{newApptTime}}
+                        </p>
+                        <form @submit.prevent="submitForm" autocomplete="on">
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fname">First name*</label>
+                                    <input
+                                        id="fname"
+                                        v-model="newFirstname"
+                                        @input="$v.newFirstname.$touch()"
+                                        class="form-control"
+                                        :class="{error: $v.newFirstname.$error, valid: !$v.newFirstname.$invalid}"
+                                    />
+                                    <p
+                                        v-if="$v.newFirstname.$error"
+                                        class="error-message"
+                                    >
+                                        Firstname required
+                                    </p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lname">Last name*</label>
+                                    <input
+                                        id="lname"
+                                        v-model="newLastname"
+                                        @input="$v.newLastname.$touch()"
+                                        class="form-control"
+                                        :class="{error: $v.newLastname.$error, valid: !$v.newLastname.$invalid}"
+                                    />
+                                    <p
+                                        v-if="$v.newLastname.$error"
+                                        class="error-message"
+                                    >
+                                        Lastname required
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-row ">
+                                <div class="col-md-12 mb-3">
+                                    <label for="phone">Phone*</label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="phone"
+                                        v-model="newPhone"
+                                        @input="$v.newPhone.$touch()"
+                                        :class="{error: $v.newPhone.$error, valid: !$v.newPhone.$invalid}"
+                                    />
+                                    <div v-if="$v.newPhone.$error">
+                                        <p
+                                            v-if="!$v.newPhone.required"
+                                            class="error-message"
+                                        >
+                                            Phone is required
+                                        </p>
+                                        <p
+                                            v-else-if="!$v.newPhone.integer"
+                                            class="error-message"
+                                        >
+                                            Phone must be a number
+                                        </p>
+                                        <p
+                                            v-else-if="!$v.newPhone.minLength"
+                                            class="error-message"
+                                        >
+                                            Phone number must be at least 10
+                                            digits
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="email">Email*</label>
+                                    <input
+                                        type="email"
+                                        class="form-control"
+                                        id="email"
+                                        v-model="newEmail"
+                                        @input="$v.newEmail.$touch()"
+                                        :class="{error: $v.newEmail.$error, valid: !$v.newEmail.$invalid}"
+                                    />
+                                    <p v-if="$v.newEmail.$error">
+                                        Please enter an email
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <button
+                                    :disabled="$v.$invalid"
+                                    class="btn btn-primary btn-sm "
+                                    id="activate-step-3"
+                                >
+                                    Continue
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row setup-content" id="step-3">
+                <div class="col-xs-10 mx-auto">
+                    <div class="col-md-12 well ">
+                        <div class="media">
+                            <div class="media-body m-2">
+                                <h3
+                                    class="mt-0 font-weight-bold"
+                                    v-if="apptConfirm"
+                                >
+                                    CONFIRM APPOINTMENT
+                                </h3>
+                                <h3
+                                    class="mt-0 font-weight-bold text-success"
+                                    v-else
+                                >
+                                    <i class="fas fa-check "></i>
+                                    APPOINTMENT CONFIRMED
+                                </h3>
+                                <h3>
+                                    {{newFirstname}} {{newLastname}}
+                                </h3>
+                                <h3>
+                                    {{newApptDate | dateFormat}} at<br />
+                                    {{newApptTime}}
+                                </h3>
+
+                                <div v-if="apptConfirm">
+                                    <button
+                                        type="button"
+                                        class="btn btn-elegant"
+                                        v-on:click="clientGoButton(); apptConfirm = !apptConfirm"
+                                    >
+                                        Confirm
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-elegant"
+                                        id="gobackTo1"
+                                    >
+                                        Reschedule
+                                    </button>
+                                </div>
+                                <div v-else>
+                                    <a
+                                        href="/app/"
+                                        type="button"
+                                        class="btn btn-elegant"
+                                        >Schedule another appointment</a
+                                    >
+                                </div>
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-xs-12 mx-auto">
+                    <div class="col-md-12 well ">
+                        <div class="media">
+                            <div class="media-body m-2">
+                                <p class="mt-0 font-weight-bold">
+                                    Add to Calendar
+                                </p>
+
+                                <button type="button" class="btn btn-elegant">
+                                    Add to iCal/Outlook
+                                </button>
+                                <br />
+                                <button type="button" class="btn btn-elegant">
+                                    Add to Google
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="/app/assets/js/validators.min.js"></script>
+        <script src="/app/assets/js/vuelidate.min.js"></script>
+        <script src="/app/assets/js/filters.js"></script>
+        <script src="/app/assets/MDB/js/jquery.js"></script>
+        <script src="/app/assets/js/main.js"></script>
+        <script
+            type="text/javascript"
+            src="/app/assets/MDB/js/popper.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="/app/assets/MDB/js/bootstrap.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="/app/assets/MDB/js/mdb.min.js"
+        ></script>
+
+        <script src="/app/controllers/appointment.js"></script>
+
+        <script
+            src="https://kit.fontawesome.com/0836a1672a.js"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
